@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	{control css}
+	<title>{ifset title}{include title|striptags} | {/ifset} Chap's sandbox</title>
+</head>
+
+<body>
+
+<div class="jumbotron">
+	<div class="container">
+		<h1><i class="fa fa-check-square-o"></i> Vítejte!</h1>
+		<p>Sandbox By Chap
+			<a n:href="Homepage:" class="btn btn-primary pull-right">Domů</a>
+			<a n:href="Admin:Homepage:" class="btn btn-default pull-right">Admin</a>
+		</p>
+
+	</div>
+</div>
+
+
+<div class="container">
+	{snippet flashes}
+		<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}" role="alert">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span class="fa fa-{$flash->type}" aria-hidden="true"></span>
+			<span class="sr-only">Error:</span>
+			{$flash->message}
+		</div>
+	{/snippet}
+
+	{include content}
+
+</div>
+
+<footer class="footer">
+	<div class="container text-center">
+		<p class="text-muted">Sandbox by <a href="http://www.chap.cz">Chap</a></p>
+	</div>
+</footer>
+{control js}{block scripts}{/block}
+</body>
+</html>

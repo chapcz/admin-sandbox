@@ -1,0 +1,48 @@
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+
+php:
+	date.timezone: Europe/Prague
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: Chap\*Module\Presenters\*Presenter
+
+session:
+	expiration: 14 days
+	savePath: "%tempDir%/sessions"
+
+extensions:
+	dbal: Nettrine\DBAL\DI\DbalExtension
+	webloader: WebLoader\Bridges\Nette\WebLoaderExtension
+	translation: Kdyby\Translation\DI\TranslationExtension
+	admin: Chap\AdminLTE\DI\Extension
+	orm: Nettrine\ORM\DI\OrmExtension
+	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+	nettrine.cache: Nettrine\Cache\DI\CacheExtension
+
+services:
+	router: Chap\Router\RouterFactory::createRouter
+	- Chap\Models\BaseAuthenticator
+	- Chap\AdminModule\Controls\Grids\UserGridControl\IUserGridFactory
+	- Chap\AdminModule\Controls\Forms\UserForm\IUserFormFactory
+
+webloader:
+    outputDir: %wwwDir%/webtemp
+    documentRoot: %wwwDir%
+
+includes:
+    - menu.neon
+
+dbal:
+    debug:
+        panel: %debugMode%
+    connection:
+        host: dbx
+        user: root
+        password: toor
+        dbname: sandbox
+        driver: pdo_mysql
+
+

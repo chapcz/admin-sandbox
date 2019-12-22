@@ -1,0 +1,31 @@
+{
+	"name": "chapcz/sandbox",
+	"autoload": {
+		"psr-4": {
+			"Chap\\": "app/"
+		}
+	},
+	"description": "Prepared Web project with Admin module",
+	"type": "project",
+	"license": ["MIT", "GPL-2.0", "GPL-3.0"],
+	"require": {
+		"php": ">= 7.2",
+		"nette/nette": "^3.0",
+		"chapcz/chap-adminlte": "dev-update-libs",
+		"ublaboo/datagrid": "^6.2",
+		"nextras/form-components": "^1.0",
+		"nextras/forms-rendering": "^1.0",
+		"kdyby/translation": "^3.0",
+		"salamek/raven-nette": "^1.3",
+		"nettrine/orm": "^0.4",
+		"nettrine/cache": "^0.1",
+		"machy8/webloader": "^1.3",
+		"kdyby/autowired": "^2.0",
+		"nepada/form-renderer": "^1.2",
+		"kdyby/doctrine-magic-accessors": "1.0.0"
+	},
+	"require-dev": {
+		"roave/security-advisories": "dev-master",
+		"nette/tester": "^1.6"
+	}
+}
