@@ -1,12 +1,9 @@
 admin:
 	cssFiles:
 		custom:
-			- %appDir%/../assets/generated/custom-admin.css
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
 	jsFiles:
 		custom:
-			- %appDir%/../assets/generated/full-admin.js
-			- %appDir%/../assets/custom.js
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.js
 	menu:
 		-
