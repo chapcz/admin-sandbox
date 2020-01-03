@@ -1,13 +1,16 @@
 {block content}
 
-<a n:href="random!" class="ajax">aaa</a>
+<a n:href="random!" class="ajax">Snippet test</a>
 {snippet random}
-{ifset $random} {$random} {/ifset}
+    {ifset $random} {$random} {/ifset}
 {/snippet}
 
 {control grid2}
-{control form}
-<img src="/">
 
+<a n:href="edit" class="btn btn-success" modal>Add user</a>
 <a n:href="test">Test</a>
 <a n:href="test" modal>Test modal</a>
+
+<hr>
+
+{control dashBoard}

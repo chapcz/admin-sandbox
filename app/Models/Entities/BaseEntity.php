@@ -3,7 +3,6 @@
 namespace Chap\Models\Entities;
 
 use Kdyby\Doctrine\MagicAccessors\MagicAccessors;
-use Nette\SmartObject;
 
 /**
  * Class BaseEntity

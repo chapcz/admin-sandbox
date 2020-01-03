@@ -4,21 +4,16 @@ namespace Chap\Models\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\IIdentity;
-use Nette\Security\Passwords;
 
 /**
  * @property integer   $id
  * @property string    $name
- * @property string    $password
  * @property string    $realName
  * @property string    $role
  * @property \DateTime $lastSeen
- * @property \DateTime $birthday
  * @property boolean   $active
  * @property boolean   $deleted
  * @property string    $email
- * @property string    $postcode
- * @property string    $someThing
  *
  * @ORM\Entity()
  * @ORM\Table(name="`user`")
@@ -47,25 +42,6 @@ class User extends BaseEntity implements IIdentity
 
 
     /**
-     * @ORM\Column(name="`password`", type="string", length=65)
-     */
-    protected $password;
-
-    /**
-     * set hashed password
-     * @param $password
-     * @return $this
-     */
-    public function setPassword($password): self
-    {
-        if (\strlen($password) > 0) {
-            $this->password = Passwords::hash($password);
-        }
-
-        return $this;
-    }
-
-    /**
      * @ORM\Column(name="realName", type="string", length=45)
      */
     protected $realName;
@@ -83,7 +59,7 @@ class User extends BaseEntity implements IIdentity
     /**
      * @ORM\Column(name="active", type="boolean")
      */
-    protected $active;
+    protected $active = true;
 
     /**
      * @ORM\Column(name="email", type="string", length=150, nullable=true)
@@ -91,29 +67,10 @@ class User extends BaseEntity implements IIdentity
     protected $email;
 
     /**
-     * @ORM\Column(name="phone", type="string", nullable=true, length=20)
-     */
-    protected $phone;
-
-    /**
      * @ORM\Column(name="deleted", type="boolean")
      */
     protected $deleted = false;
 
-    public function setBirthday($start)
-    {
-        if ($start === null) {
-            $this->birthday = null;
-        } else {
-            $this->birthday = \DateTime::createFromFormat('d.m.Y', $start)->setTime(0, 0);
-        }
-        return $this;
-
-    }
-
-    public function __construct()
-    {
-    }
 
     /**
      * Returns the ID of user.
@@ -132,6 +89,4 @@ class User extends BaseEntity implements IIdentity
     {
         return [$this->role];
     }
-
-
 }

@@ -21,6 +21,7 @@ extensions:
 	orm: Nettrine\ORM\DI\OrmExtension
 	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
 	nettrine.cache: Nettrine\Cache\DI\CacheExtension
+	hydrator: Nettrine\Hydrator\DI\HydratorExtension
 
 services:
 	router: Chap\Router\RouterFactory::createRouter

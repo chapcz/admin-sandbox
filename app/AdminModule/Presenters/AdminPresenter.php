@@ -3,6 +3,8 @@
 namespace Chap\AdminModule\Presenters;
 
 use Chap\AdminLTE\AdminControl;
+use Chap\AdminLTE\Components\InfoBox\InfoBoard;
+use Chap\AdminLTE\Components\InfoBox\InfoBox;
 use Chap\AdminLTE\IAdminControlFactory;
 use Chap\AdminLTE\Notifications\MessagePanel;
 use Chap\AdminLTE\Notifications\NotificationPanel;
@@ -11,15 +13,29 @@ use Chap\AdminModule\Controls\Forms\UserForm\IUserFormFactory;
 use Chap\AdminModule\Controls\Forms\UserForm\UserForm;
 use Chap\AdminModule\Controls\Grids\UserGridControl\IUserGridFactory;
 use Chap\AdminModule\Controls\Grids\UserGridControl\UserGrid;
-use Chap\Presenters\BasePresenter;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\Presenter;
+use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
-class AdminPresenter extends BasePresenter
+/**
+ * Class AdminPresenter
+ * @secured
+ */
+class AdminPresenter extends SecuredPresenter
 {
     /**
      * @var IAdminControlFactory
      */
     private $adminControlFactory;
+
+    /** @var IUserGridFactory @inject */
+    public $userGridFactory;
+
+    /** @var IUserFormFactory @inject */
+    public $userFormFactory;
+
+    /** @var integer */
+    private $id;
 
     public function __construct(IAdminControlFactory $adminControlFactory)
     {
@@ -51,6 +67,26 @@ class AdminPresenter extends BasePresenter
         };
 
         return $admin;
+    }
+
+    protected function createComponentDashBoard(): InfoBoard
+    {
+        return (new InfoBoard())
+            ->setColSpan(6)
+            ->addBox((new InfoBox())
+                ->setColor('red')
+                ->setLink('#')
+                ->setIcon('pencil')
+                ->setNumber(1222)
+                ->setProgress(90)
+                ->setText('Pencil text')
+            )
+            ->addBox((new InfoBox())
+                ->setColor('green')
+                ->setIcon('globe')
+                ->setText('Globe text')
+                ->setNumber((float) rand(0, 9999))
+            );
     }
 
     private function getExampleNotificationsPanel() :NotificationPanel
@@ -102,27 +138,43 @@ class AdminPresenter extends BasePresenter
         $this->flashMessage('Looking for: ' . $word);
     }
 
-
-
-    public function handleRandom()
+    public function handleRandom(): void
     {
         $this->template->random = rand(0, 10000);
         $this->redrawControl('random');
 
     }
 
-    protected function createComponentGrid2(IUserGridFactory $factory): UserGrid
+    protected function createComponentGrid2(): UserGrid
     {
-        return $factory->create();
+        return $this->userGridFactory->create();
     }
 
-    protected function createComponentForm(IUserFormFactory $factory): UserForm
+    protected function createComponentForm(): UserForm
     {
-        return $factory->create();
+        $userForm = $this->userFormFactory->create($this->id);
+        $userForm->onUserSave[] = function ($form, $user) {
+            $this->flashMessage("User '$user->name' saved");
+            $this->redirect('default');
+        };
+
+        return $userForm;
     }
 
-    public function actionTest()
+    public function actionTest(): void
     {
+    }
 
+    public function actionEdit(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @secured
+     */
+    public function handleSecured(): void
+    {
+        $this->redirect('this');
     }
 }

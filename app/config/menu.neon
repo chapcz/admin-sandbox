@@ -1,9 +1,12 @@
 admin:
+	skin: red
 	cssFiles:
 		custom:
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
 	jsFiles:
 		custom:
+			- %appDir%/../assets/live-form-validation.js
+			- %appDir%/../assets/custom.js
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.js
 	menu:
 		-
@@ -13,6 +16,12 @@ admin:
 			resource: ""
 			privilege: ""
 			role: ""
+			items:
+			    -
+			        name: "Editace"
+			        link: "Admin:edit"
+			        icon: "fa-pencil"
+			        show: false
 		-
 			name: "Dvaaa"
 			icon: "fa-pie-chart"
@@ -27,6 +36,6 @@ admin:
 					icon: fa-trip
 					items:
 					    -
-					        name: ctyri
+					        name: pet
 					        link: "Admin:goo"
 					        icon: asdad
