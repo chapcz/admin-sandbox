@@ -2,3 +2,5 @@ vendor/
 node_modules/
 bower_components/
 .idea/
+app/config/config.override.neon
+.htaccess

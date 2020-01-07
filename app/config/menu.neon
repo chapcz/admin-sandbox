@@ -1,7 +1,8 @@
 admin:
-	skin: red
+	skin: blue
 	cssFiles:
 		custom:
+			- %appDir%/../assets/custom.css
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.css
 	jsFiles:
 		custom:
