@@ -24,7 +24,7 @@ class UserForm extends Control
     /** @var ITranslator */
     public $translator;
 
-    /** @var IFormRenderer */
+    /** @var IFormRenderer|Bootstrap3Renderer */
     public $formRenderer;
 
     /** @var IHydrator */
@@ -53,6 +53,7 @@ class UserForm extends Control
         $this->idEdit = $id;
         $this->translator = $it;
         $this->formRenderer = new Bootstrap3Renderer($templateFactory);
+        $this->formRenderer->setHorizontalMode(2,10);
         $this->entityManager = $em;
         $this->hydrator = $hydration;
     }

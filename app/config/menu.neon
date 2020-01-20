@@ -11,7 +11,7 @@ admin:
 			- %appDir%/../vendor/ublaboo/datagrid/assets/datagrid.js
 	menu:
 		-
-			name: "Domu"
+			name: "Home"
 			link: "Admin:"
 			icon: "fa-files-o"
 			resource: ""
@@ -19,24 +19,24 @@ admin:
 			role: ""
 			items:
 			    -
-			        name: "Editace"
+			        name: "Edit"
 			        link: "Admin:edit"
 			        icon: "fa-pencil"
 			        show: false
 		-
-			name: "Dvaaa"
+			name: "Tree menu"
 			icon: "fa-pie-chart"
 			items:
 				-
-					name: tri
-					link: "Admin:boo"
+					name: Slow component
+					link: "Admin:slow"
 					icon: fa-trip
 				-
-					name: ctyri
-					link: "Admin:foo"
+					name: Sub tree
+					link: "Admin:subTree"
 					icon: fa-trip
 					items:
 					    -
-					        name: pet
-					        link: "Admin:goo"
+					        name: Level 3 item
+					        link: "Admin:level3"
 					        icon: asdad

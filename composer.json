@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">= 7.2",
 		"nette/nette": "^3.0",
-		"chapcz/chap-adminlte": "^2.0.0",
+		"chapcz/chap-adminlte": "^2.1.0",
 		"ublaboo/datagrid": "^6.2",
 		"nextras/form-components": "^1.0",
 		"nextras/forms-rendering": "^1.0",
@@ -22,7 +22,7 @@
 		"nettrine/cache": "^0.1",
 		"nettrine/hydrator": "dev-master",
 		"machy8/webloader": "^1.3",
-		"nepada/form-renderer": "^1.2",
+		"nepada/form-renderer": "^1.3",
 		"kdyby/doctrine-magic-accessors": "1.0.0"
 	},
 	"require-dev": {

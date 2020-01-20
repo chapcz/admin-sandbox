@@ -28,6 +28,7 @@ services:
 	- Chap\Models\BaseAuthenticator
 	- Chap\AdminModule\Controls\Grids\UserGridControl\IUserGridFactory
 	- Chap\AdminModule\Controls\Forms\UserForm\IUserFormFactory
+	- Chap\AdminModule\Controls\Async\SlowComponent\ISlowComponentFactory
 
 webloader:
     outputDir: %wwwDir%/webtemp

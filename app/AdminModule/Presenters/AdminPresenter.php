@@ -5,17 +5,19 @@ namespace Chap\AdminModule\Presenters;
 use Chap\AdminLTE\AdminControl;
 use Chap\AdminLTE\Components\InfoBox\InfoBoard;
 use Chap\AdminLTE\Components\InfoBox\InfoBox;
+use Chap\AdminLTE\Components\LazyScreen\LazyScreen;
 use Chap\AdminLTE\IAdminControlFactory;
+use Chap\AdminLTE\Notifications\BasePanel;
+use Chap\AdminLTE\Notifications\LinkPanel;
 use Chap\AdminLTE\Notifications\MessagePanel;
 use Chap\AdminLTE\Notifications\NotificationPanel;
 use Chap\AdminLTE\Notifications\TaskPanel;
+use Chap\AdminModule\Controls\Async\SlowComponent\ISlowComponentFactory;
 use Chap\AdminModule\Controls\Forms\UserForm\IUserFormFactory;
 use Chap\AdminModule\Controls\Forms\UserForm\UserForm;
 use Chap\AdminModule\Controls\Grids\UserGridControl\IUserGridFactory;
 use Chap\AdminModule\Controls\Grids\UserGridControl\UserGrid;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
-use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
 /**
  * Class AdminPresenter
@@ -33,6 +35,9 @@ class AdminPresenter extends SecuredPresenter
 
     /** @var IUserFormFactory @inject */
     public $userFormFactory;
+
+    /** @var ISlowComponentFactory @inject */
+    public $slowComponentFactory;
 
     /** @var integer */
     private $id;
@@ -52,7 +57,8 @@ class AdminPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \Chap\AdminLTE\AdminControl
+     * @return AdminControl
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     protected function createComponentAdmin(): AdminControl
     {
@@ -60,6 +66,7 @@ class AdminPresenter extends SecuredPresenter
             ->create()
             ->addPanel($this->getExampleNotificationsPanel())
             ->addPanel($this->getExampleTasksPanel())
+            ->addPanel($this->getMessagesPanel2())
             ->addPanel($this->getMessagesPanel());
 
         $admin->onSearch[] = function (Form $form) {
@@ -69,6 +76,10 @@ class AdminPresenter extends SecuredPresenter
         return $admin;
     }
 
+    /**
+     * @return InfoBoard
+     * @throws \Exception
+     */
     protected function createComponentDashBoard(): InfoBoard
     {
         return (new InfoBoard())
@@ -85,7 +96,7 @@ class AdminPresenter extends SecuredPresenter
                 ->setColor('green')
                 ->setIcon('globe')
                 ->setText('Globe text')
-                ->setNumber((float) rand(0, 9999))
+                ->setNumber((float) random_int(0, 9999))
             );
     }
 
@@ -98,21 +109,33 @@ class AdminPresenter extends SecuredPresenter
             ->addNotification('#', 'Something')
             ->addNotification('#', 'Something')
             ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
             ;
     }
 
+    /**
+     * @return MessagePanel
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     private function getMessagesPanel() :MessagePanel
     {
         return (new MessagePanel())
             ->setLinkAll('#')
             ->setCounter(2)
             ->setHeaderTitle('%d messages')
-            ->addMessage('#', 'Hallo', 'world !', '/image/avatar.png', '2 hours ago')
-            ->addMessage('#', 'This', 'is message', '/image/avatar.png', '3 hours ago');
+            ->addMessage($this->link('alert!', 'Link from MessagePanel: Hallo '), 'Hallo', 'world !', '/images/message.png', '2 hours ago')
+            ->addMessage($this->link('alert!', 'Link from MessagePanel: This '), 'This', 'is message', '/images/message.png', '3 hours ago');
+    }
+
+    /**
+     * @return BasePanel
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    private function getMessagesPanel2() :BasePanel
+    {
+        return (new LinkPanel())
+            ->setLinkAll($this->link('alert!', 'Link from LinkPanel'))
+            ->setIcon('envelope')
+            ->setCounter(200);
     }
 
     private function getExampleTasksPanel() :TaskPanel
@@ -123,10 +146,19 @@ class AdminPresenter extends SecuredPresenter
             ->setHeaderTitle(null);
 
         for ($i = 1; $i <= 10; $i++ ) {
-            $panel->addTask('#', 'My task ' . $i, $i*10);
+            $link = $this->link('alert!', 'Link from TaskPanel ' . $i);
+            $panel->addTask($link, 'My task ' . $i, $i*10);
         }
 
         return $panel;
+    }
+
+    /**
+     * @param $text
+     */
+    public function handleAlert($text): void
+    {
+        $this->flashMessage($text);
     }
 
     /**
@@ -138,18 +170,37 @@ class AdminPresenter extends SecuredPresenter
         $this->flashMessage('Looking for: ' . $word);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handleRandom(): void
     {
-        $this->template->random = rand(0, 10000);
+        $this->template->random = random_int(0, 10000);
         $this->redrawControl('random');
 
     }
 
+    /**
+     * @return UserGrid
+     */
     protected function createComponentGrid2(): UserGrid
     {
         return $this->userGridFactory->create();
     }
 
+    /**
+     * @return LazyScreen
+     */
+    protected function createComponentSlowScreen(): LazyScreen
+    {
+        return new LazyScreen(function () {
+            return $this->slowComponentFactory->create();
+        });
+    }
+
+    /**
+     * @return UserForm
+     */
     protected function createComponentForm(): UserForm
     {
         $userForm = $this->userFormFactory->create($this->id);
@@ -172,6 +223,7 @@ class AdminPresenter extends SecuredPresenter
 
     /**
      * @secured
+     * @throws \Nette\Application\AbortException
      */
     public function handleSecured(): void
     {
