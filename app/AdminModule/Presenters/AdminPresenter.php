@@ -2,173 +2,20 @@
 
 namespace Chap\AdminModule\Presenters;
 
-use Chap\AdminLTE\AdminControl;
-use Chap\AdminLTE\Components\InfoBox\InfoBoard;
-use Chap\AdminLTE\Components\InfoBox\InfoBox;
+use Chap\AdminLTE\Components\ActionButtons\Button;
+use Chap\AdminLTE\Components\ActionButtons\DropLink;
 use Chap\AdminLTE\Components\LazyScreen\LazyScreen;
-use Chap\AdminLTE\IAdminControlFactory;
-use Chap\AdminLTE\Notifications\BasePanel;
-use Chap\AdminLTE\Notifications\LinkPanel;
-use Chap\AdminLTE\Notifications\MessagePanel;
-use Chap\AdminLTE\Notifications\NotificationPanel;
-use Chap\AdminLTE\Notifications\TaskPanel;
-use Chap\AdminModule\Controls\Async\SlowComponent\ISlowComponentFactory;
-use Chap\AdminModule\Controls\Forms\UserForm\IUserFormFactory;
+use Chap\AdminModule\Controls\Async\SlowComponent\SlowComponent;
 use Chap\AdminModule\Controls\Forms\UserForm\UserForm;
 use Chap\AdminModule\Controls\Grids\UserGridControl\IUserGridFactory;
 use Chap\AdminModule\Controls\Grids\UserGridControl\UserGrid;
-use Nette\Application\UI\Form;
 
 /**
  * Class AdminPresenter
  * @secured
  */
-class AdminPresenter extends SecuredPresenter
+class AdminPresenter extends AbstractAdminPresenter
 {
-    /**
-     * @var IAdminControlFactory
-     */
-    private $adminControlFactory;
-
-    /** @var IUserGridFactory @inject */
-    public $userGridFactory;
-
-    /** @var IUserFormFactory @inject */
-    public $userFormFactory;
-
-    /** @var ISlowComponentFactory @inject */
-    public $slowComponentFactory;
-
-    /** @var integer */
-    private $id;
-
-    public function __construct(IAdminControlFactory $adminControlFactory)
-    {
-        parent::__construct();
-        $this->adminControlFactory = $adminControlFactory;
-    }
-
-    protected function startup()
-    {
-        parent::startup();
-        if ($this->getParameter('no_layout',false)){
-            $this->setLayout(false);
-        }
-    }
-
-    /**
-     * @return AdminControl
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    protected function createComponentAdmin(): AdminControl
-    {
-        $admin = $this->adminControlFactory
-            ->create()
-            ->addPanel($this->getExampleNotificationsPanel())
-            ->addPanel($this->getExampleTasksPanel())
-            ->addPanel($this->getMessagesPanel2())
-            ->addPanel($this->getMessagesPanel());
-
-        $admin->onSearch[] = function (Form $form) {
-            $this->redirect('search', ['word' => $form->getValues()['q']]);
-        };
-
-        return $admin;
-    }
-
-    /**
-     * @return InfoBoard
-     * @throws \Exception
-     */
-    protected function createComponentDashBoard(): InfoBoard
-    {
-        return (new InfoBoard())
-            ->setColSpan(6)
-            ->addBox((new InfoBox())
-                ->setColor('red')
-                ->setLink('#')
-                ->setIcon('pencil')
-                ->setNumber(1222)
-                ->setProgress(90)
-                ->setText('Pencil text')
-            )
-            ->addBox((new InfoBox())
-                ->setColor('green')
-                ->setIcon('globe')
-                ->setText('Globe text')
-                ->setNumber((float) random_int(0, 9999))
-            );
-    }
-
-    private function getExampleNotificationsPanel() :NotificationPanel
-    {
-        return (new NotificationPanel(null))
-            ->setLinkAll('#')
-            ->setCounter(50)
-            ->setHeaderTitle('%d Notifications')
-            ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
-            ->addNotification('#', 'Something')
-            ;
-    }
-
-    /**
-     * @return MessagePanel
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    private function getMessagesPanel() :MessagePanel
-    {
-        return (new MessagePanel())
-            ->setLinkAll('#')
-            ->setCounter(2)
-            ->setHeaderTitle('%d messages')
-            ->addMessage($this->link('alert!', 'Link from MessagePanel: Hallo '), 'Hallo', 'world !', '/images/message.png', '2 hours ago')
-            ->addMessage($this->link('alert!', 'Link from MessagePanel: This '), 'This', 'is message', '/images/message.png', '3 hours ago');
-    }
-
-    /**
-     * @return BasePanel
-     * @throws \Nette\Application\UI\InvalidLinkException
-     */
-    private function getMessagesPanel2() :BasePanel
-    {
-        return (new LinkPanel())
-            ->setLinkAll($this->link('alert!', 'Link from LinkPanel'))
-            ->setIcon('envelope')
-            ->setCounter(200);
-    }
-
-    private function getExampleTasksPanel() :TaskPanel
-    {
-        $panel = (new TaskPanel())
-            ->setLinkAll('#')
-            ->setCounter(0)
-            ->setHeaderTitle(null);
-
-        for ($i = 1; $i <= 10; $i++ ) {
-            $link = $this->link('alert!', 'Link from TaskPanel ' . $i);
-            $panel->addTask($link, 'My task ' . $i, $i*10);
-        }
-
-        return $panel;
-    }
-
-    /**
-     * @param $text
-     */
-    public function handleAlert($text): void
-    {
-        $this->flashMessage($text);
-    }
-
-    /**
-     * @param $word
-     */
-    public function actionSearch(string $word): void
-    {
-        $this->flashMessage('Looking for: ' . $word, 'danger');
-        $this->flashMessage('Looking for: ' . $word);
-    }
 
     /**
      * @throws \Exception
@@ -181,11 +28,12 @@ class AdminPresenter extends SecuredPresenter
     }
 
     /**
+     * @param IUserGridFactory $factory
      * @return UserGrid
      */
-    protected function createComponentGrid2(): UserGrid
+    protected function createComponentGrid2(IUserGridFactory $factory): UserGrid
     {
-        return $this->userGridFactory->create();
+        return $factory->create();
     }
 
     /**
@@ -212,8 +60,16 @@ class AdminPresenter extends SecuredPresenter
         return $userForm;
     }
 
-    public function actionTest(): void
+    /**
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
+    public function renderButtons(): void
     {
+        $this['admin']->addActionButton(Button::builder()->typeWarning()
+            ->link($this->link('this#test'))->faIcon('eye')->build());
+        $this['admin']->addActionButton(Button::builder()->typeInfo()
+            ->link($this->link('this#test2'))->faIcon('cog')->build());
+        $this['admin']->addDropdownLink(new DropLink('', 'link'));
     }
 
     public function actionEdit(?int $id): void

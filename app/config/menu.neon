@@ -24,13 +24,21 @@ admin:
 			        icon: "fa-pencil"
 			        show: false
 		-
+			name: Slow component
+			link: "Admin:slow"
+			icon: fa-spinner
+		-
+			name: Header buttons
+			link: "Admin:buttons"
+			icon: fa-caret-square-o-right
+		-
+			name: Dashboard
+			link: "Admin:dashboard"
+			icon: fa-list-alt
+		-
 			name: "Tree menu"
 			icon: "fa-pie-chart"
 			items:
-				-
-					name: Slow component
-					link: "Admin:slow"
-					icon: fa-trip
 				-
 					name: Sub tree
 					link: "Admin:subTree"

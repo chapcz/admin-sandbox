@@ -5,7 +5,7 @@ namespace Chap\AdminModule\Presenters;
 use Nette\Application\UI\Presenter;
 use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
-class HomepagePresenter extends SecuredPresenter
+class HomepagePresenter extends AbstractAdminPresenter
 {
     /**
      * @param $id
