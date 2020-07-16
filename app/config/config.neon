@@ -18,11 +18,17 @@ extensions:
 	webloader: WebLoader\Bridges\Nette\WebLoaderExtension
 	translation: Kdyby\Translation\DI\TranslationExtension
 	admin: Chap\AdminLTE\DI\Extension
-	orm: Nettrine\ORM\DI\OrmExtension
-	orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+	nettrine.orm: Nettrine\ORM\DI\OrmExtension
 	nettrine.cache: Nettrine\Cache\DI\CacheExtension
+	nettrine.orm.console: Nettrine\ORM\DI\OrmConsoleExtension(%consoleMode%)
+	nettrine.orm.annotations: Nettrine\ORM\DI\OrmAnnotationsExtension
+	nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
 	hydrator: Nettrine\Hydrator\DI\HydratorExtension
 	autowired: Kdyby\Autowired\DI\AutowiredExtension
+
+nettrine.orm.annotations:
+  namespaces: [Chap\Models\Entities]
+  paths: [%appDir%/Model/Entities]
 
 services:
 	router: Chap\Router\RouterFactory::createRouter
